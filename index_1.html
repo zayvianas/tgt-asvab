@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TGT ASVAB Prep</title>
+<meta name="description" content="Study tools for the ASVAB: vocabulary cards and math formula cards from Tutoring by TGT.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b0912">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&family=Karla:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#f4f2ef; --card:#ffffff; --ink:#171322; --ink-2:#5d5870; --line:#e0dcd6;
+    --violet:#5b3df5; --violet-soft:#ece8ff; --teal:#0e6f66; --teal-soft:#dcefec;
+    --shadow:0 2px 6px rgba(23,19,34,.07);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0b0912; --card:#171325; --ink:#f3f1fb; --ink-2:#a49dc2; --line:#2b2540;
+      --violet:#a693ff; --violet-soft:#241d3d; --teal:#5fd3c0; --teal-soft:#12302c;
+      --shadow:0 2px 6px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b0912; --card:#171325; --ink:#f3f1fb; --ink-2:#a49dc2; --line:#2b2540;
+    --violet:#a693ff; --violet-soft:#241d3d; --teal:#5fd3c0; --teal-soft:#12302c;
+    --shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Karla,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.55}
+  .wrap{max-width:620px;margin:0 auto;padding-block:36px 56px;padding-left:20px;padding-right:20px}
+  .eyebrow{font-family:Outfit,sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin:0}
+  h1{font-family:Outfit,sans-serif;font-weight:900;font-size:clamp(34px,9vw,46px);line-height:1.05;letter-spacing:-.03em;margin:8px 0 10px}
+  .lede{color:var(--ink-2);margin:0 0 28px;max-width:46ch}
+  .decks{display:flex;flex-direction:column;gap:14px}
+  a.deck{display:block;text-decoration:none;color:inherit;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);transition:transform .15s ease,border-color .15s ease}
+  a.deck:hover,a.deck:focus-visible{transform:translateY(-2px)}
+  a.deck.w:hover,a.deck.w:focus-visible{border-color:var(--violet)}
+  a.deck.f:hover,a.deck.f:focus-visible{border-color:var(--teal)}
+  a.deck:focus-visible{outline:2.5px solid currentColor;outline-offset:3px}
+  .tag{display:inline-block;font-family:Outfit,sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+  .w .tag{background:var(--violet-soft);color:var(--violet)}
+  .f .tag{background:var(--teal-soft);color:var(--teal)}
+  a.deck h2{font-family:Outfit,sans-serif;font-weight:900;font-size:26px;letter-spacing:-.02em;margin:10px 0 4px}
+  a.deck p{margin:0;color:var(--ink-2);font-size:15.5px}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-family:Outfit,sans-serif;font-weight:700;font-size:13px;color:var(--ink-2)}
+  .how{margin-top:32px;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:18px 22px;box-shadow:var(--shadow)}
+  .how h3{font-family:Outfit,sans-serif;font-weight:900;font-size:17px;margin:0 0 8px}
+  .how ol{margin:0;padding-left:20px;color:var(--ink-2)}
+  .how li{margin:5px 0}
+  footer{margin-top:30px;color:var(--ink-2);font-size:14px}
+  footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Tutoring by TGT</p>
+  <h1>ASVAB Study Tools</h1>
+  <p class="lede">Two card decks built for the sections that decide whether you qualify. Swipe through them anywhere, mark what you know, and come back to what you don't.</p>
+
+  <div class="decks">
+    <a class="deck w" href="words.html">
+      <span class="tag">Word Knowledge</span>
+      <h2>Word Deck</h2>
+      <p>250 words sorted easy to hard. Each card flips to the meaning, the Latin or Greek root, a sentence, the opposite, and a way to remember it.</p>
+      <div class="meta"><span>250 cards</span><span>3 levels</span><span>Review pile</span></div>
+    </a>
+
+    <a class="deck f" href="formulas.html">
+      <span class="tag">Math &amp; Word Problems</span>
+      <h2>Formula Deck</h2>
+      <p>61 cards that start from what the question looks like, then give you the formula, the steps, a worked example, and the trap to avoid.</p>
+      <div class="meta"><span>61 cards</span><span>Formulas</span><span>Traps</span></div>
+    </a>
+  </div>
+
+  <div class="how">
+    <h3>Put it on your home screen</h3>
+    <ol>
+      <li><strong>iPhone:</strong> tap the share button in Safari, then "Add to Home Screen."</li>
+      <li><strong>Android:</strong> tap the menu in Chrome, then "Install app" or "Add to Home screen."</li>
+      <li>It opens full screen like an app, and it works without a signal once you've loaded it.</li>
+    </ol>
+  </div>
+
+  <footer>Your progress saves on this device. Tutoring by TGT.</footer>
+</div>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>

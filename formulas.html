@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#08110f">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>html,body{height:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Formula Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&family=Karla:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --bg:#f1f4f3; --card:#ffffff; --card-2:#0f1a1c; --ink:#12201f; --ink-2:#4f6663; --line:#d9e2df;
+    --accent:#0e6f66; --accent-soft:#dcefec; --know:#1c7a52; --know-soft:#dcf5e9; --again:#a35a06; --again-soft:#fbeedd;
+    --onDark:#effaf8; --onDark-2:#9cb8b4; --darkline:#26383a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#08110f; --card:#12201f; --card-2:#17292a; --ink:#e9f6f3; --ink-2:#9db8b4; --line:#26383a;
+      --accent:#5fd3c0; --accent-soft:#12302c; --know:#57d3a0; --know-soft:#123227; --again:#e7a75a; --again-soft:#33250f;
+      --onDark:#effaf8; --onDark-2:#9cb8b4; --darkline:#2d4547;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#08110f; --card:#12201f; --card-2:#17292a; --ink:#e9f6f3; --ink-2:#9db8b4; --line:#26383a;
+    --accent:#5fd3c0; --accent-soft:#12302c; --know:#57d3a0; --know-soft:#123227; --again:#e7a75a; --again-soft:#33250f;
+    --onDark:#effaf8; --onDark-2:#9cb8b4; --darkline:#2d4547;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Karla,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;overflow:hidden}
+  .app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto;padding-left:16px;padding-right:16px}
+  header{padding-block:12px 8px;display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
+  .toprow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brand{font-family:Outfit,sans-serif;font-weight:900;font-size:20px;letter-spacing:-.01em}
+  .brand span{color:var(--accent)}
+  .count{font-family:Outfit,sans-serif;font-weight:700;font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .bar{height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
+  .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .chip{flex:0 0 auto;font-family:Outfit,sans-serif;font-weight:700;font-size:13px;letter-spacing:.02em;padding:6px 13px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--ink-2);cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  :root[data-theme="dark"] .chip[aria-pressed="true"]{color:#08110f}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#08110f}}
+
+  .feed{flex:1 1 auto;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -4px}
+  .feed::-webkit-scrollbar{display:none}
+  .slot{height:100%;scroll-snap-align:center;scroll-snap-stop:always;padding:8px 4px 14px;display:flex}
+  .card{position:relative;flex:1;perspective:1400px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .inner{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.3,.8,.35,1);transform-style:preserve-3d}
+  .card.flipped .inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;padding:24px 22px;display:flex;flex-direction:column;overflow:hidden}
+  .front{background:var(--card);border:1.5px solid var(--line);align-items:flex-start;gap:12px}
+  .back{background:var(--card-2);color:var(--onDark);transform:rotateY(180deg);gap:11px;overflow-y:auto}
+  .cat{font-family:Outfit,sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px;border:1.5px solid currentColor;color:var(--accent)}
+  .cue{font-family:Outfit,sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:auto 0 0}
+  .ask{font-family:Outfit,sans-serif;font-weight:900;font-size:clamp(25px,7vw,36px);line-height:1.12;letter-spacing:-.02em;margin:6px 0 auto;text-wrap:balance}
+  .prompt{font-family:Outfit,sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+  .status{position:absolute;top:18px;right:18px;font-family:Outfit,sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+  .status.know{background:var(--know-soft);color:var(--know)}
+  .status.again{background:var(--again-soft);color:var(--again)}
+  .back h3{font-family:Outfit,sans-serif;font-weight:900;font-size:22px;margin:0;letter-spacing:-.02em}
+  .lab{font-family:Outfit,sans-serif;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--onDark-2);margin:0 0 3px}
+  .blk{border-top:1px solid var(--darkline);padding-top:9px}
+  .blk p{margin:0}
+  .formula{font-family:"Cambria Math",Georgia,serif;font-size:21px;font-weight:600;background:rgba(95,211,192,.14);border:1px solid rgba(95,211,192,.35);border-radius:10px;padding:10px 13px;text-align:center}
+  .steps{margin:0;padding-left:18px}
+  .steps li{margin:3px 0}
+  .ex{background:rgba(255,255,255,.05);border-left:3px solid #5fd3c0;border-radius:0 10px 10px 0;padding:9px 12px}
+  .ex b{color:#9ff0e4}
+  .trap{background:rgba(231,167,90,.14);border-left:3px solid #e7a75a;border-radius:0 10px 10px 0;padding:9px 12px}
+  .trap b{color:#f0c48a}
+  .marks{margin-top:auto;display:flex;gap:10px;padding-top:12px}
+  .marks button{flex:1;font-family:Outfit,sans-serif;font-weight:700;font-size:15px;padding:12px 8px;border-radius:12px;border:1.5px solid var(--darkline);background:transparent;color:var(--onDark);cursor:pointer}
+  .marks button.got{background:var(--know);border-color:var(--know);color:#07130e}
+  .marks button.rev{background:var(--again);border-color:var(--again);color:#231502}
+  button:focus-visible,.card:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
+  .end{background:var(--card);border:1.5px dashed var(--line);border-radius:22px;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;gap:12px;flex:1;text-align:center}
+  .end h3{font-family:Outfit,sans-serif;font-weight:900;font-size:26px;margin:0}
+  .end p{margin:0;color:var(--ink-2)}
+  .end button{font-family:Outfit,sans-serif;font-weight:700;font-size:15px;padding:12px 18px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+  @media (prefers-reduced-motion:reduce){.inner{transition:none}}
+
+  .home{position:fixed;left:10px;top:calc(8px + env(safe-area-inset-top,0px));z-index:5;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:99px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-size:17px;line-height:1}
+  .app{padding-top:0}
+  header .brand{margin-left:40px}
+</style>
+
+</head>
+<body>
+<a href="index.html" class="home" aria-label="Back to all decks">&#8592;</a>
+<div class="app">
+  <header>
+    <div class="toprow">
+      <div class="brand">Formula<span>Deck</span></div>
+      <div class="count" id="count">0 of 0</div>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="chips" id="chips">
+      <button class="chip" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" data-f="formula" aria-pressed="false">Formulas</button>
+      <button class="chip" data-f="word" aria-pressed="false">Word problems</button>
+      <button class="chip" data-f="math" aria-pressed="false">Math rules</button>
+      <button class="chip" data-f="trap" aria-pressed="false">Traps</button>
+      <button class="chip" data-f="review" aria-pressed="false">Review pile</button>
+      <button class="chip" id="shuffle" aria-pressed="false">Shuffle</button>
+    </div>
+  </header>
+  <div class="feed" id="feed"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var CARDS = [
+    {id:"drt",c:"formula",cue:"When you see",q:"Miles and hours, or any speed problem",f:"distance = rate × time",st:["Write d = rt and fill in the two you have.","Solving for rate? rate = distance ÷ time.","Solving for time? time = distance ÷ rate."],ex:"240 miles at 60 mph. Time = 240 ÷ 60 = <b>4 hours</b>.",tr:"Units must match. 30 minutes is 0.5 hours, not 30."},
+    {id:"avg",c:"formula",cue:"When you see",q:"“Average,” “mean,” or a set of scores",f:"average = total ÷ how many",st:["Add everything up, divide by the count."],ex:"90, 84, 78 → 252 ÷ 3 = <b>84</b>.",tr:"You cannot average two averages unless each covers the same number of things."},
+    {id:"avgback",c:"formula",cue:"When you see",q:"“What does she need on the last test to average ___?”",f:"needed = (average × count) − what you have",st:["Multiply the target average by the number of scores. That's the total you need.","Add up the scores you already have.","Subtract."],ex:"Needs an 86 over 4 quizzes: 4 × 86 = 344. Has 255. Needs <b>89</b>.",tr:"Use the total number of scores, including the one not taken yet."},
+    {id:"pctof",c:"formula",cue:"When you see",q:"“What is 15% of 80?”",f:"percent × whole  (as a decimal)",st:["Move the decimal two places left: 15% = 0.15.","Multiply."],ex:"0.15 × 80 = <b>12</b>. Or: 10% of 80 = 8, half of that is 4, so 8 + 4 = 12.",tr:"“Of” means multiply, every time."},
+    {id:"pctwhat",c:"formula",cue:"When you see",q:"“12 is what percent of 60?”",f:"part ÷ whole",st:["Divide the part by the whole.","Move the decimal two places right to turn it into a percent."],ex:"12 ÷ 60 = 0.2 = <b>20%</b>.",tr:"The number after “of” is the whole. It goes on the bottom."},
+    {id:"pctchange",c:"formula",cue:"When you see",q:"“By what percent did it increase or decrease?”",f:"change ÷ original",st:["Find the change: bigger minus smaller.","Divide by the number you STARTED with.","Convert to a percent."],ex:"$900 to $981: change is 81. 81 ÷ 900 = 0.09 = <b>9%</b>.",tr:"Dividing by the new number instead of the original is the most common error on this type."},
+    {id:"unit",c:"formula",cue:"When you see",q:"“At that rate, what do 7 cost?”",f:"price for one, then multiply",st:["Divide to get the cost of one.","Multiply by the new amount."],ex:"3 notebooks for $4.50 → $1.50 each → 7 × 1.50 = <b>$10.50</b>.",tr:"Estimate first: 7 is more than double 3, so the answer must be more than $9."},
+    {id:"work",c:"formula",cue:"When you see",q:"Someone does an amount of work in an amount of time",f:"time per unit × number of units",st:["Divide to find how long ONE takes.","Multiply by how many you need."],ex:"3 rooms in 6 hours → 2 hours per room → 8 rooms = <b>16 hours</b>.",tr:"Read whether they want total time or time per item."},
+    {id:"ratio",c:"formula",cue:"When you see",q:"A ratio plus a total (“3:5 in a class of 40”)",f:"total ÷ sum of parts = size of one part",st:["Add the ratio numbers to get total parts.","Divide the total by that.","Multiply by the part you were asked about."],ex:"3:5 of 40 → 8 parts → 40 ÷ 8 = 5 → boys = 3 × 5 = <b>15</b>.",tr:"Check your work by adding the groups back to the total."},
+    {id:"prop",c:"formula",cue:"When you see",q:"Two ratios set equal, with one unknown",f:"cross multiply",st:["Multiply diagonally across the equals sign.","Solve the small equation that's left."],ex:"4/6 = x/15 → 4 × 15 = 6x → 60 = 6x → x = <b>10</b>.",tr:"Keep the same units in the same position on both sides."},
+    {id:"interest",c:"formula",cue:"When you see",q:"Simple interest on money",f:"I = P × r × t",st:["P is the starting amount, r is the rate as a decimal, t is time in YEARS.","Multiply all three."],ex:"$2,000 at 5% for 3 years: 2000 × 0.05 × 3 = <b>$300</b> interest.",tr:"6 months is 0.5 years. And I is the interest alone, not the total."},
+    {id:"rect",c:"formula",cue:"When you see",q:"A rectangle or square",f:"area = l × w  ·  perimeter = 2(l + w)",st:["Area is the space inside, in square units.","Perimeter is the distance around."],ex:"9 by 5: area = <b>45</b>, perimeter = <b>28</b>.",tr:"Fencing is perimeter. Carpet, paint and tile are area."},
+    {id:"tri",c:"formula",cue:"When you see",q:"A triangle's area",f:"area = ½ × base × height",st:["Multiply base by height.","Take half."],ex:"Base 10, height 6: 60 ÷ 2 = <b>30</b>.",tr:"The height is straight up from the base, not the slanted side."},
+    {id:"circle",c:"formula",cue:"When you see",q:"A circle",f:"area = πr²  ·  circumference = 2πr",st:["Radius is half the diameter.","Square the radius for area; double it for circumference."],ex:"Radius 4: area = <b>16π</b> (about 50.3), circumference = <b>8π</b> (about 25.1).",tr:"Mixing the two is the classic miss. Area has the square in it."},
+    {id:"vol",c:"formula",cue:"When you see",q:"A box or a cylinder's volume",f:"box = l × w × h  ·  cylinder = πr²h",st:["Volume is always area of the base times height."],ex:"Box 3 × 4 × 5 = <b>60</b> cubic units.",tr:"Volume answers are in cubic units. Area answers are square units."},
+    {id:"pyth",c:"formula",cue:"When you see",q:"A right triangle with one side missing",f:"a² + b² = c²",st:["c is the hypotenuse, the long side across from the right angle.","Square the two you know, add or subtract, then take the square root."],ex:"Legs 3 and 4: 9 + 16 = 25, so c = <b>5</b>.",tr:"Know 3-4-5 and 6-8-10. They show up constantly."},
+    {id:"angles",c:"formula",cue:"When you see",q:"Angles in a triangle or on a line",f:"triangle = 180°  ·  straight line = 180°  ·  circle = 360°",st:["Add the angles you know, subtract from 180 for a triangle."],ex:"Angles 50 and 60: third angle = 180 − 110 = <b>70°</b>.",tr:"Complementary adds to 90. Supplementary adds to 180. C comes before S, and 90 before 180."},
+
+    {id:"pemdas",c:"math",cue:"Rule",q:"Order of operations",f:"P E MD AS",st:["Parentheses, then exponents.","Multiply and divide LEFT TO RIGHT.","Add and subtract left to right."],ex:"18 ÷ 3 × 2 = 6 × 2 = <b>12</b>, not 3.",tr:"Multiply does not automatically come before divide. They're tied, so go left to right."},
+    {id:"signs",c:"math",cue:"Rule",q:"Positive and negative numbers",f:"same signs add · different signs subtract",st:["Adding with the same sign: add, keep the sign.","Adding with different signs: subtract, keep the sign of the bigger number.","Multiplying or dividing: same signs give positive, different give negative."],ex:"−7 + 3 = <b>−4</b> · (−6)(−3) = <b>18</b> · 8 − (−3) = <b>11</b>.",tr:"“Two negatives make a positive” is for multiplying and dividing, not adding."},
+    {id:"fracadd",c:"math",cue:"Rule",q:"Adding or subtracting fractions",f:"match the bottoms first",st:["Find a number both denominators divide into.","Multiply the top and bottom of each fraction to get there.","Add or subtract only the tops.","Simplify."],ex:"1/3 + 1/4 → 4/12 + 3/12 = <b>7/12</b>.",tr:"Never add straight across. 1/3 + 1/4 is not 2/7."},
+    {id:"fracmult",c:"math",cue:"Rule",q:"Multiplying or dividing fractions",f:"straight across · Keep Change Flip",st:["Multiply: tops together, bottoms together, then simplify.","Divide: keep the first, change ÷ to ×, flip the second."],ex:"3/4 ÷ 1/2 → 3/4 × 2/1 = 6/4 = <b>3/2</b>.",tr:"No common denominator is needed for multiplying or dividing. That's only for adding and subtracting."},
+    {id:"mixed",c:"math",cue:"Rule",q:"Mixed numbers",f:"(whole × bottom + top) over the bottom",st:["Convert before multiplying or dividing."],ex:"2 1/3 → (2 × 3 + 1)/3 = <b>7/3</b>.",tr:"Trying to multiply mixed numbers as-is gives the wrong answer almost every time."},
+    {id:"convert",c:"math",cue:"Rule",q:"Fraction, decimal, percent",f:"÷ to decimal · ×100 to percent",st:["Fraction to decimal: divide top by bottom.","Decimal to percent: move the decimal 2 right.","Percent to fraction: put it over 100 and simplify."],ex:"3/5 = 0.6 = <b>60%</b> · 0.125 = <b>1/8</b> · 45% = <b>9/20</b>.",tr:"Memorize 1/2, 1/4, 3/4, 1/5, 1/8, 1/3. They turn several problems into instant answers."},
+    {id:"exp",c:"math",cue:"Rule",q:"Exponents",f:"x³ · x² = x⁵ · x⁶ ÷ x² = x⁴ · (x²)³ = x⁶",st:["Multiplying the same base: add the exponents.","Dividing: subtract.","Power of a power: multiply.","Anything to the zero power is 1."],ex:"2³ · 2² = 2⁵ = <b>32</b>.",tr:"3² means 3 × 3 = 9, not 3 × 2. And (−3)² = 9 while −3² = −9."},
+    {id:"roots",c:"math",cue:"Rule",q:"Square roots",f:"√x asks: what times itself gives x?",st:["Memorize the squares 1 through 15.","To estimate, find the two perfect squares it sits between."],ex:"√144 = <b>12</b> · √54 is between 7 and 8, closer to <b>7.3</b>.",tr:"√144 + √25 = 12 + 5 = 17. You cannot add under the roots."},
+    {id:"solve1",c:"math",cue:"Rule",q:"Solving an equation",f:"undo in reverse order",st:["Undo addition and subtraction first.","Then undo multiplication and division.","Whatever you do to one side, do to the other.","Plug your answer back in."],ex:"2x + 5 = 17 → 2x = 12 → x = <b>6</b>.",tr:"Checking takes ten seconds and catches nearly every sign error."},
+    {id:"solve2",c:"math",cue:"Rule",q:"Variables on both sides",f:"move the smaller x term first",st:["Distribute any parentheses.","Subtract the smaller x term from both sides.","Now it's a two-step equation."],ex:"5x + 3 = 2x + 18 → 3x + 3 = 18 → 3x = 15 → x = <b>5</b>.",tr:"Moving the bigger x term leaves you with a negative x and more chances to slip."},
+    {id:"dist",c:"math",cue:"Rule",q:"A number outside parentheses",f:"a(b + c) = ab + ac",st:["Multiply the outside number by EVERY term inside.","Watch the signs."],ex:"−2(x − 5) = <b>−2x + 10</b>.",tr:"3(x + 4) = 3x + 4 is wrong. The 3 has to reach the 4."},
+    {id:"like",c:"math",cue:"Rule",q:"Simplifying an expression",f:"combine only matching variables",st:["Group the x terms, keeping each sign attached.","Group the plain numbers.","x and x² are not like terms."],ex:"4x + 3 + 2x − 7 = <b>6x − 4</b>.",tr:"6x − 4 cannot be combined further. Different terms stay separate."},
+    {id:"ineq",c:"math",cue:"Rule",q:"An inequality (&lt; &gt; ≤ ≥)",f:"solve like an equation, but flip for negatives",st:["Do the same steps as a normal equation.","If you multiply or divide both sides by a negative, flip the symbol."],ex:"−2x &lt; 8 → x <b>&gt;</b> −4.",tr:"Test your answer with one real number. It catches a missed flip instantly."},
+    {id:"stats",c:"math",cue:"Rule",q:"Mean, median, mode, range",f:"average · middle · most often · high minus low",st:["Median: put the numbers in order first, then take the middle one.","With an even count, average the two middle numbers."],ex:"3, 7, 7, 10 → mean 6.75, median 7, mode <b>7</b>, range <b>7</b>.",tr:"Forgetting to sort before finding the median is the usual mistake."},
+    {id:"vocab",c:"math",cue:"Rule",q:"Math words that show up in questions",f:"integer · factor · multiple · prime",st:["Integer: a whole number, positive or negative, no fractions.","Factor: a number that divides evenly into it.","Multiple: what you get multiplying it by 1, 2, 3...","Prime: divisible only by 1 and itself."],ex:"Factors of 12: 1, 2, 3, 4, 6, 12. Multiples of 12: 12, 24, 36...",tr:"Factors are smaller and fewer. Multiples are bigger and go forever."},
+    {id:"div",c:"math",cue:"Trick",q:"Is it divisible? (no calculator)",f:"quick divisibility checks",st:["By 2: it ends in an even digit.","By 3: the digits add to a multiple of 3.","By 5: it ends in 0 or 5.","By 9: the digits add to a multiple of 9.","By 10: it ends in 0."],ex:"381 → 3 + 8 + 1 = 12, so it's divisible by <b>3</b>.",tr:"This turns ugly fractions into simplify-able ones fast."},
+    {id:"sci",c:"math",cue:"Rule",q:"Scientific notation",f:"a number between 1 and 10, times a power of 10",st:["Positive exponent: move the decimal right.","Negative exponent: move it left."],ex:"1.25 × 10⁴ = <b>12,500</b>.",tr:"The exponent is how many places to move, not how many zeros to write."},
+
+    {id:"wq1",c:"word",cue:"When you see",q:"“How much for 7 if 3 cost $4.50?”",f:"find one, then scale",st:["Divide for the price of one.","Multiply by the number asked for."],ex:"$4.50 ÷ 3 = $1.50 → 7 × $1.50 = <b>$10.50</b>.",tr:"Estimate first so a wildly wrong answer can't sneak past."},
+    {id:"wq2",c:"word",cue:"When you see",q:"A discount, then tax added",f:"discount first, tax on what's left",st:["Find the sale price.","Apply tax to the SALE price, not the original."],ex:"$75 at 20% off = $60. Tax 8% of 60 = $4.80. Total <b>$64.80</b>.",tr:"Both $15 and $60 will be answer choices. Read what's actually being asked."},
+    {id:"wq3",c:"word",cue:"When you see",q:"“After a 25% discount it costs $36. What was the original?”",f:"work backwards from what's left",st:["25% off means she paid 75%.","So 0.75 × original = 36.","Divide: 36 ÷ 0.75."],ex:"36 ÷ 0.75 = <b>$48</b>. Check: 25% of 48 = 12, and 48 − 12 = 36.",tr:"Adding 25% of $36 gives $45, which is wrong. Percents come off the original, not the sale price."},
+    {id:"wq4",c:"word",cue:"When you see",q:"Two things moving, one with a head start",f:"head start ÷ how fast the gap closes",st:["Find how far ahead the first one is when the second starts.","Subtract the speeds to get the closing rate.","Divide the head start by that."],ex:"100 miles ahead, gaining 20 mph → 100 ÷ 20 = <b>5 hours</b>.",tr:"Answer the question asked: the time, or the clock time it happens?"},
+    {id:"wq5",c:"word",cue:"When you see",q:"“Two consecutive numbers add to 53”",f:"call them x and x + 1",st:["Write the equation: x + (x + 1) = 53.","Combine and solve.","Consecutive even or odd? Use x and x + 2."],ex:"2x + 1 = 53 → x = <b>26</b>, so 26 and 27.",tr:"Read whether they want the smaller, the larger, or both."},
+    {id:"wq6",c:"word",cue:"When you see",q:"An age problem",f:"let x = the younger person",st:["Name the unknown as the smaller quantity.","Write the other person in terms of x.","Solve, then answer the person actually asked about."],ex:"Mom is 3 times her son and they total 48: x + 3x = 48 → son is <b>12</b>.",tr:"Solving for x correctly and then reporting the wrong person is a real trap."},
+    {id:"wq7",c:"word",cue:"When you see",q:"“$5 more than twice what Ben has”",f:"translate word by word",st:["“Twice what Ben has” = 2b.","“$5 more than” = + 5.","“is” = equals."],ex:"2b + 5 = 31 → b = <b>13</b>.",tr:"“3 less than x” is x − 3, NOT 3 − x. That order flips people constantly."},
+    {id:"wq8",c:"word",cue:"When you see",q:"“How many boxes/buses/containers are needed?”",f:"divide, then round UP",st:["Do the division.","Any remainder means one more container."],ex:"53 people, buses hold 20: 53 ÷ 20 = 2.65 → <b>3 buses</b>.",tr:"This is the one place you round up even when the decimal is small."},
+    {id:"wq9",c:"word",cue:"When you see",q:"Time given in mixed units",f:"convert before you calculate",st:["Minutes to hours: divide by 60.","90 minutes = 1.5 hours. 45 minutes = 0.75 hours."],ex:"9:15 a.m. to 12:45 p.m. = <b>3.5 hours</b>.",tr:"Typing 3:30 into a rate calculation as 3.30 is wrong. It's 3.5."},
+    {id:"wq10",c:"word",cue:"When you see",q:"A map or scale drawing",f:"set up a proportion",st:["Put the same units in the same positions.","Cross multiply."],ex:"1 inch = 250 miles. How far is 5 inches? 1/250 = 5/x → x = <b>1,250 miles</b>.",tr:"Label the units as you write them, or the setup flips."},
+    {id:"wq11",c:"word",cue:"When you see",q:"Gas mileage, price per pound, anything “per”",f:"divide the total by the number of units",st:["The word “per” means divide.","Check the order: miles per gallon is miles ÷ gallons."],ex:"348 miles on 12 gallons = <b>29 mpg</b>.",tr:"Dividing in the wrong order gives 0.034, which should look obviously wrong."},
+    {id:"wq12",c:"word",cue:"When you see",q:"“How much is left?”",f:"total minus what was used",st:["Find the amount used or spent first.","Subtract from the starting total."],ex:"$60 budget, spent 40% → spent $24 → <b>$36 left</b>.",tr:"The amount used will be one of the answer choices. Underline whether they want used or left."},
+    {id:"wq13",c:"word",cue:"When you see",q:"A raise, markup, or price increase by percent",f:"new = original × (1 + percent)",st:["Up 60%? Multiply by 1.6.","Down 25%? Multiply by 0.75."],ex:"$40 marked up 60% = 1.6 × 40 = <b>$64</b>.",tr:"Up 60% then down 25% does not return to the start. The percents come off different numbers."},
+    {id:"wq14",c:"word",cue:"When you see",q:"Hourly pay plus a bonus or overtime",f:"break it into pieces, then add",st:["Calculate the regular pay.","Calculate the extra piece separately.","Add them."],ex:"$18/hr for 6 hours plus a $25 bonus = 108 + 25 = <b>$133</b>.",tr:"Overtime is usually 1.5 times the hourly rate, and only for hours past 40."},
+    {id:"wq15",c:"word",cue:"When you see",q:"A recipe scaled up or down",f:"find the multiplier",st:["Divide the new amount by the old to get the multiplier.","Multiply every ingredient by it."],ex:"Serves 6 with 2.5 cups; for 15 servings the multiplier is 2.5, so <b>6.25 cups</b>.",tr:"Scale every ingredient, not just the one you're asked about, if the question wants a total."},
+
+    {id:"t1",c:"trap",cue:"Trap",q:"Answering the question they didn't ask",f:"underline the question first",st:["Before doing any math, underline what's being asked and in what units.","When you finish, reread it."],ex:"“Sale price” is not the discount. “How many right” is not how many wrong.",tr:"The almost-right number is always in the choices. Always."},
+    {id:"t2",c:"trap",cue:"Trap",q:"Percent change divided by the wrong number",f:"always divide by the ORIGINAL",st:["Change ÷ where you started.","Not the new number, not the total of both."],ex:"250 → 280: 30 ÷ 250 = <b>12%</b>, not 30 ÷ 280.",tr:"An increase and the matching decrease are different percents for this exact reason."},
+    {id:"t3",c:"trap",cue:"Trap",q:"Averaging two speeds",f:"you cannot average rates directly",st:["Find total distance and total time.","Divide."],ex:"60 mph out and 40 mph back is not 50 mph average, because the slow leg takes longer.",tr:"If a question looks too easy on speeds, this is usually why."},
+    {id:"t4",c:"trap",cue:"Trap",q:"Adding fractions straight across",f:"bottoms must match first",st:["Common denominator, then add the tops only."],ex:"2/5 + 1/10 = 4/10 + 1/10 = <b>1/2</b>, not 3/15.",tr:"3/15 will be one of the four choices. Cross it out on sight."},
+    {id:"t5",c:"trap",cue:"Trap",q:"Exponent mix-ups",f:"3² is 3 × 3, and parentheses matter",st:["An exponent counts copies of the base.","(−3)² = 9 because the whole −3 is the base.","−3² = −9 because only the 3 is squared."],ex:"2x squared is 2x², but (2x)² is 4x².",tr:"Ask yourself what the exponent is actually touching."},
+    {id:"t6",c:"trap",cue:"Trap",q:"Left to right with × and ÷",f:"they are tied in PEMDAS",st:["Work them in the order they appear."],ex:"18 ÷ 3 × 2 = <b>12</b>. Doing 3 × 2 first gives 3, which is wrong.",tr:"Same rule applies to addition and subtraction."},
+    {id:"t7",c:"trap",cue:"Trap",q:"“Less than” written backwards",f:"3 less than x means x − 3",st:["Start with the thing being reduced, then subtract."],ex:"“7 less than a number is 12” → x − 7 = 12 → x = <b>19</b>.",tr:"“Subtracted from” flips the same way: 5 subtracted from x is x − 5."},
+    {id:"t8",c:"trap",cue:"Trap",q:"Perimeter and area swapped",f:"around vs inside",st:["Perimeter is the fence around it, measured in regular units.","Area is the space inside, measured in square units."],ex:"9 by 5 rectangle: perimeter <b>28 ft</b>, area <b>45 sq ft</b>.",tr:"If the answer choices have square units, they want area."},
+    {id:"t9",c:"trap",cue:"Trap",q:"Forgetting to flip the inequality",f:"negative multiply or divide = flip",st:["Only when you multiply or divide both sides by a negative."],ex:"−4x &gt; 20 → x <b>&lt;</b> −5.",tr:"Plug in one number from your answer range to check."},
+    {id:"t10",c:"trap",cue:"Trap",q:"Not using the answer choices",f:"backsolving is legal and fast",st:["Try a middle choice in the problem.","Too big or too small tells you which way to go."],ex:"2x + 6 = 20 with choices 5, 6, 7, 8: try 7 → 14 + 6 = 20 ✓",tr:"Use it when the setup confuses you, not as your first move on every problem."},
+    {id:"t11",c:"trap",cue:"Trap",q:"Units that don't match",f:"convert before calculating",st:["Minutes with mph, inches with feet, ounces with pounds: fix it first."],ex:"Rate in miles per hour needs time in hours: 45 minutes = <b>0.75 hours</b>.",tr:"Check your final answer's units against what the question asked for."},
+    {id:"t12",c:"trap",cue:"Trap",q:"Rushing on an untimed section",f:"slow is free, wrong is not",st:["Reread the question after solving.","Do a quick estimate to sanity-check the size of your answer."],ex:"If 7 notebooks should cost more than $9 and you got $4.50, something's off.",tr:"Most lost points on math come from misreading, not from not knowing."}
+  ];
+
+  var KEY = "formuladeck.marks.v1";
+  var marks = {};
+  try { marks = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ marks = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e){} }
+
+  var filter = "all", order = CARDS.map(function(_,i){ return i; });
+  var feed = document.getElementById("feed");
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+  var CATNAME = {formula:"Formula", word:"Word problem", math:"Math rule", trap:"Trap"};
+
+  function visible(){
+    return order.filter(function(i){
+      var c = CARDS[i];
+      if(filter === "all") return true;
+      if(filter === "review") return marks[c.id] === "again";
+      return c.c === filter;
+    });
+  }
+
+  function cardHTML(i){
+    var c = CARDS[i], mark = marks[c.id];
+    var badge = mark === "know" ? '<div class="status know">Got it</div>' :
+                mark === "again" ? '<div class="status again">Review</div>' : '';
+    return '<div class="slot"><div class="card" data-i="'+i+'" tabindex="0" role="button" aria-label="Flip card">' +
+      '<div class="inner">' +
+        '<div class="face front">' + badge +
+          '<span class="cat">'+CATNAME[c.c]+'</span>' +
+          '<p class="cue">'+c.cue+'</p>' +
+          '<h2 class="ask">'+c.q+'</h2>' +
+          '<p class="prompt">Tap for the move &nbsp;·&nbsp; swipe up for next</p>' +
+        '</div>' +
+        '<div class="face back">' +
+          '<h3>'+c.q+'</h3>' +
+          '<div class="formula">'+c.f+'</div>' +
+          '<div class="blk"><p class="lab">Do this</p><ol class="steps">'+c.st.map(function(s){ return '<li>'+s+'</li>'; }).join("")+'</ol></div>' +
+          '<div class="blk"><p class="lab">Quick example</p><div class="ex">'+c.ex+'</div></div>' +
+          '<div class="blk"><p class="lab">Watch out</p><div class="trap">'+c.tr+'</div></div>' +
+          '<div class="marks"><button class="rev" data-mark="again" data-id="'+c.id+'">Review later</button>' +
+          '<button class="got" data-mark="know" data-id="'+c.id+'">Got it</button></div>' +
+        '</div>' +
+      '</div></div></div>';
+  }
+
+  function render(){
+    var list = visible();
+    if(!list.length){
+      feed.innerHTML = '<div class="slot"><div class="end"><h3>Nothing here yet</h3><p>Mark a few cards "Review later" and they show up in this pile.</p><button id="backAll">Back to all cards</button></div></div>';
+    } else {
+      feed.innerHTML = list.map(cardHTML).join("") +
+        '<div class="slot"><div class="end"><h3>That\'s the set</h3><p>'+list.length+' card'+(list.length===1?"":"s")+' done. Run the review pile, or shuffle and go again.</p><button id="again">Start over</button></div></div>';
+    }
+    feed.scrollTop = 0;
+    updateCount();
+  }
+
+  function updateCount(){
+    var known = CARDS.filter(function(c){ return marks[c.id] === "know"; }).length;
+    document.getElementById("count").textContent = known + " of " + CARDS.length + " known";
+    document.getElementById("bar").style.width = (known / CARDS.length * 100) + "%";
+  }
+
+  feed.addEventListener("click", function(e){
+    var mk = e.target.closest("[data-mark]");
+    if(mk){
+      e.stopPropagation();
+      var id = mk.dataset.id;
+      marks[id] = marks[id] === mk.dataset.mark ? undefined : mk.dataset.mark;
+      if(!marks[id]) delete marks[id];
+      save(); updateCount();
+      var card = mk.closest(".card");
+      var badge = card.querySelector(".status");
+      if(badge) badge.remove();
+      if(marks[id]){
+        var b = document.createElement("div");
+        b.className = "status " + (marks[id] === "know" ? "know" : "again");
+        b.textContent = marks[id] === "know" ? "Got it" : "Review";
+        card.querySelector(".front").appendChild(b);
+      }
+      card.classList.remove("flipped");
+      var slot = card.closest(".slot");
+      if(slot.nextElementSibling) slot.nextElementSibling.scrollIntoView({behavior:"smooth", block:"center"});
+      return;
+    }
+    if(e.target.id === "backAll"){ setFilter("all"); return; }
+    if(e.target.id === "again"){ feed.scrollTo({top:0, behavior:"smooth"}); return; }
+    var card = e.target.closest(".card");
+    if(card) card.classList.toggle("flipped");
+  });
+
+  feed.addEventListener("keydown", function(e){
+    if((e.key === "Enter" || e.key === " ") && e.target.classList.contains("card")){
+      e.preventDefault(); e.target.classList.toggle("flipped");
+    }
+  });
+
+  function setFilter(f){
+    filter = f;
+    document.querySelectorAll(".chip[data-f]").forEach(function(c){
+      c.setAttribute("aria-pressed", String(c.dataset.f === f));
+    });
+    render();
+  }
+
+  document.getElementById("chips").addEventListener("click", function(e){
+    var chip = e.target.closest(".chip");
+    if(!chip) return;
+    if(chip.id === "shuffle"){
+      for(var i = order.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = order[i]; order[i] = order[j]; order[j] = t;
+      }
+      render();
+      return;
+    }
+    setFilter(chip.dataset.f);
+  });
+
+  render();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}
+</script>
+</body>
+</html>
